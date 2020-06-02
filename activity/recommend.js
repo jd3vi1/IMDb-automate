@@ -2,6 +2,7 @@ const puppeteer = require("puppeteer");
 const fs = require("fs");
 const credsFile = process.argv[2];
 const movie = process.argv[3];
+const rating = process.argv[4];
 
 // main function
 (async function () {
@@ -34,11 +35,15 @@ const movie = process.argv[3];
 
 	// #title-overview-widget div.ribbonize > div
 	// result page
+
 	if (await inWatchlist(tab)) {
-		console.log("You've watched this");
+		console.log("Now you've watched this!");
 		// await tab.waitForSelector("#title-overview-widget div.ribbonize > div");
 		await tab.click("#title-overview-widget div.ribbonize > div");
 	}
+
+	// give rating
+	await setRating(tab);
 })();
 
 // login function
@@ -97,6 +102,22 @@ async function inWatchlist(tab) {
 			.querySelector("#title-overview-widget div.ribbonize > div")
 			.classList.contains("inWL");
 	});
+}
+
+// function to give the rating
+async function setRating(tab) {
+	await tab.waitForSelector("#star-rating-widget > div > button");
+	await tab.click("#star-rating-widget > div > button");
+
+	await tab.waitForSelector(
+		"#star-rating-widget > div > div > span:nth-child(1) > span"
+	);
+	await tab.hover(
+		`#star-rating-widget > div > div > span:nth-child(1) > span > a:nth-child(${rating})`
+	);
+	await tab.click(
+		`#star-rating-widget > div > div > span:nth-child(1) > span > a:nth-child(${rating})`
+	);
 }
 
 // helper function for navigation
