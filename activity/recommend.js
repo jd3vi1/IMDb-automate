@@ -30,26 +30,15 @@ const movie = process.argv[3];
 	await login(tab, email, password);
 
 	// search
-	await tab.waitForSelector(
-		"#nav-search-form > div.search-category-selector > div > label > div"
-	);
-	await tab.click(
-		"#nav-search-form > div.search-category-selector > div > label > div"
-	);
+	await search(tab);
 
-	await tab.waitForSelector(
-		'#navbar-search-category-select-contents > ul > a[aria-label="Titles"]'
-	);
-	await tab.click(
-		'#navbar-search-category-select-contents > ul > a[aria-label="Titles"]'
-	);
-
-	await tab.waitForSelector("#suggestion-search");
-	await tab.type("#suggestion-search", movie);
-	// await tab.keyboard.press("Enter");
-
-	await tab.waitForSelector("#react-autowhatever-1--item-0 > a");
-	await navigationHelper(tab, "#react-autowhatever-1--item-0 > a");
+	// #title-overview-widget div.ribbonize > div
+	// result page
+	if (await inWatchlist(tab)) {
+		console.log("You've watched this");
+		// await tab.waitForSelector("#title-overview-widget div.ribbonize > div");
+		await tab.click("#title-overview-widget div.ribbonize > div");
+	}
 })();
 
 // login function
@@ -73,6 +62,41 @@ async function login(tab, email, password) {
 
 	await tab.waitForSelector('input[type="submit"]');
 	await navigationHelper(tab, 'input[type="submit"]');
+}
+
+// search title function
+async function search(tab) {
+	await tab.waitForSelector(
+		"#nav-search-form > div.search-category-selector > div > label > div"
+	);
+	await tab.click(
+		"#nav-search-form > div.search-category-selector > div > label > div"
+	);
+
+	await tab.waitForSelector(
+		'#navbar-search-category-select-contents > ul > a[aria-label="Titles"]'
+	);
+	await tab.click(
+		'#navbar-search-category-select-contents > ul > a[aria-label="Titles"]'
+	);
+
+	await tab.waitForSelector("#suggestion-search");
+	await tab.type("#suggestion-search", movie);
+	// await tab.keyboard.press("Enter");
+
+	await tab.waitForSelector("#react-autowhatever-1--item-0 > a");
+	await navigationHelper(tab, "#react-autowhatever-1--item-0 > a");
+}
+
+// check if title in Watchlist
+async function inWatchlist(tab) {
+	console.log("Checking...");
+	await tab.waitForSelector("#title-overview-widget div.ribbonize > div");
+	return await tab.evaluate(() => {
+		return document
+			.querySelector("#title-overview-widget div.ribbonize > div")
+			.classList.contains("inWL");
+	});
 }
 
 // helper function for navigation
