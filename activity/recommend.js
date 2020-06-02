@@ -3,6 +3,7 @@ const fs = require("fs");
 const credsFile = process.argv[2];
 const movie = process.argv[3];
 const rating = process.argv[4];
+let scrapedData = [];
 
 // main function
 (async function () {
@@ -33,17 +34,28 @@ const rating = process.argv[4];
 	// search
 	await search(tab);
 
-	// #title-overview-widget div.ribbonize > div
 	// result page
-
 	if (await inWatchlist(tab)) {
 		console.log("Now you've watched this!");
-		// await tab.waitForSelector("#title-overview-widget div.ribbonize > div");
 		await tab.click("#title-overview-widget div.ribbonize > div");
 	}
 
 	// give rating
 	await setRating(tab);
+
+	// add recommendations to watchlist
+	await addToWatchlist(tab);
+
+	// sort according to rating
+	scrapedData.sort((a, b) => {
+		return a.rating > b.rating ? -1 : 1;
+	});
+
+	// write the recommendations to a file, store it as JSON
+	await fs.promises.writeFile(
+		"watchNext.JSON",
+		JSON.stringify(scrapedData, null, 4)
+	);
 })();
 
 // login function
@@ -113,11 +125,89 @@ async function setRating(tab) {
 		"#star-rating-widget > div > div > span:nth-child(1) > span"
 	);
 	await tab.hover(
-		`#star-rating-widget > div > div > span:nth-child(1) > span > a:nth-child(${rating})`
+		`#star-rating-widget > div > div > span:nth-child(1) > span > a:nth-child(${rating})`,
+		{ delay: 500 }
 	);
 	await tab.click(
-		`#star-rating-widget > div > div > span:nth-child(1) > span > a:nth-child(${rating})`
+		`#star-rating-widget > div > div > span:nth-child(1) > span > a:nth-child(${rating})`,
+		{ delay: 500 }
 	);
+}
+
+// function to scrape data
+async function scraper(tab, i) {
+	let title = await tab.evaluate((i) => {
+		return document.querySelector(
+			`#title_recs > div.rec_overviews > div:nth-child(${i}) > div.rec_details > div > div.rec-jaw-upper > div.rec-title > a > b`
+		).innerText;
+	}, i);
+	let rating = await tab.evaluate((i) => {
+		return document.querySelector(
+			`#title_recs > div.rec_overviews > div:nth-child(${i}) > div.rec_details > div > div.rec-jaw-upper > div.rec-rating > div > span:nth-child(4) > span:first-child`
+		).innerText;
+	}, i);
+	let genre = await tab.evaluate((i) => {
+		return document.querySelector(
+			`#title_recs > div.rec_overviews > div:nth-child(${i}) > div.rec_details > div > div.rec-jaw-upper > div.rec-cert-genre.rec-elipsis`
+		).innerText;
+	}, i);
+	let synopsis = await tab.evaluate((i) => {
+		return document.querySelector(
+			`#title_recs > div.rec_overviews > div:nth-child(${i}) > div.rec_details > div > div.rec-jaw-upper > div.rec-rating > div.rec-outline > p`
+		).innerText;
+	}, i);
+	return {
+		title,
+		rating,
+		genre,
+		synopsis,
+	};
+}
+
+// function to add all recommendations to watchlist
+async function addToWatchlist(tab) {
+	for (let i = 1; i <= 12; i++) {
+		if (i === 7) {
+			await delay(1000);
+		}
+		await tab.waitForSelector(
+			`#title_recs > div.rec_overviews > div:nth-child(${i}) > div.rec_actions > div.rec_action_divider > div > span > a > a`
+		);
+
+		// scrape movie data
+		let scrapeObject = await scraper(tab, i);
+		console.log("After scraper");
+
+		scrapedData.push(scrapeObject);
+		console.log(scrapedData);
+
+		// checks if already in watchlist
+		let inWL = await tab.evaluate((i) => {
+			console.log(i);
+			return document
+				.querySelector(
+					`#title_recs > div.rec_overviews > div:nth-child(${i}) > div.rec_actions > div.rec_action_divider > div > span > a > a`
+				)
+				.classList.contains("btn2_glyph_on");
+		}, i);
+		// click on next title
+		if (inWL) {
+			await tab.waitForSelector(
+				`#title_recs > div.rec_overviews > div:nth-child(${i}) > div.rec_actions > div.rec_next_btn > span > a`
+			);
+			await tab.click(
+				`#title_recs > div.rec_overviews > div:nth-child(${i}) > div.rec_actions > div.rec_next_btn > span > a`,
+				{ delay: 500 }
+			);
+		} else {
+			// add to watchlist
+			await tab.click(
+				`#title_recs > div.rec_overviews > div:nth-child(${i}) > div.rec_actions > div.rec_action_divider > div > span > a > a`,
+				{ delay: 500 }
+			);
+		}
+		console.log("After clicking next");
+	}
 }
 
 // helper function for navigation
@@ -128,4 +218,11 @@ async function navigationHelper(tab, selector) {
 		}),
 		tab.click(selector),
 	]);
+}
+
+// delay function
+function delay(time) {
+	return new Promise(function (resolve) {
+		setTimeout(resolve, time);
+	});
 }
