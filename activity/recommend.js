@@ -13,6 +13,7 @@ let scrapedData = [];
 	let creds = JSON.parse(data);
 	email = creds.email;
 	password = creds.password;
+	password2 = creds.password2;
 
 	// launch browser
 	let browser = await puppeteer.launch({
@@ -47,7 +48,10 @@ let scrapedData = [];
 	// add recommendations to watchlist
 	await addToWatchlist(tab);
 
-	// sort according to rating
+	// tweet a quote
+	await tweet(tab, browser, email, password2);
+
+	// sort scraped data according to rating
 	scrapedData.sort((a, b) => {
 		return a.rating > b.rating ? -1 : 1;
 	});
@@ -224,6 +228,98 @@ async function addToWatchlist(tab) {
 	console.table(scrapedData);
 }
 
+// funciton to post a tweet
+async function tweet(tab, browser, email, password2) {
+	// goto quotes page
+	await tab.waitForSelector(
+		"#quicklinksMainSection > span.show_more.quicklink"
+	);
+	await tab.click("#quicklinksMainSection > span.show_more.quicklink", {
+		delay: 500,
+	});
+	delay(1000);
+	await tab.waitForSelector(
+		"#full_subnav > div:nth-child(4) > div > div:nth-child(5) > a"
+	);
+	await navigationHelper(
+		tab,
+		"#full_subnav > div:nth-child(4) > div > div:nth-child(5) > a"
+	);
+
+	// generate a random number between 1-10
+	let randomNumber = Math.round(Math.random() * 10);
+
+	// select a quote
+	await tab.waitForSelector(
+		`.list > div:nth-child(${randomNumber}) > div.sodatext`
+	);
+	let quote = await tab.evaluate((randomNumber) => {
+		return document.querySelector(
+			`.list > div:nth-child(${randomNumber}) > div.sodatext`
+		).innerText;
+	}, randomNumber);
+	quote += `#${movie.split(" ").join("")} #moviequotes #${rating}on10`;
+
+	// click on share
+	await tab.waitForSelector(
+		`.list > div:nth-child(${randomNumber}) > div.did-you-know-actions > span.linksoda > a`
+	);
+	await tab.click(
+		`.list > div:nth-child(${randomNumber}) > div.did-you-know-actions > span.linksoda > a`
+	);
+
+	await tab.waitForSelector(
+		`.list > div:nth-child(${randomNumber}) > div.did-you-know-actions > div.sharesoda_pre > a:nth-child(3)`
+	);
+	// promise for a new window
+	const newPagePromise = new Promise((x) =>
+		browser.once("targetcreated", (target) => x(target.page()))
+	);
+	await tab.click(
+		`.list > div:nth-child(${randomNumber}) > div.did-you-know-actions > div.sharesoda_pre > a:nth-child(3)`
+	);
+
+	// handle twitter popup
+	const popup = await newPagePromise;
+
+	// twitter login
+	await popup.waitForSelector('input[name="session[username_or_email]"]');
+	await popup.type('input[name="session[username_or_email]"]', email, {
+		delay: 100,
+	});
+
+	await popup.waitForSelector('input[name="session[password]"]');
+	await popup.type('input[name="session[password]"]', password2, {
+		delay: 100,
+	});
+
+	await popup.waitForSelector(
+		'div[role="button"][data-focusable="true"]:nth-child(2)'
+	);
+	await popup.click('div[role="button"][data-focusable="true"]:nth-child(2)');
+
+	// typing the tweet
+	await popup.waitForSelector(
+		'div.DraftEditor-editorContainer div[data-testid="tweetTextarea_0"]'
+	);
+	await popup.type(
+		'div.DraftEditor-editorContainer div[data-testid="tweetTextarea_0"]',
+		quote
+	);
+	await popup.waitForSelector('div[role="button"][data-testid="tweetButton"]');
+	await popup.click('div[role="button"][data-testid="tweetButton"]');
+
+	// delay to view the tweet
+	await delay(5000);
+
+	// try clicking again
+	await popup.click('div[role="button"][data-testid="tweetButton"]');
+
+	// close the popup window
+	await popup.close();
+}
+
+// function to create HTML from scraped data
 async function createHTML(tab, browser) {
 	let html = scrapedData.map((obj) => {
 		return `<div>

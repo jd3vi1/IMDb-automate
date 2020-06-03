@@ -6,7 +6,7 @@ This is an automated web scraper written in node, using puppeteer.
 
 * [x] Logs into the user's account, searches and rates a given movie/show.
   
-* [x] Adds all similar movies to watchlist (skips if they're already added).
+* [x] Adds all similar movies to watchlist (skips if they're already added/rated).
   
 * [x] Scrapes data from all the similar movies.
 
@@ -18,7 +18,7 @@ This is an automated web scraper written in node, using puppeteer.
   
 * [ ] Convert to PDF.
   
-* [ ] Sharing a movie quote from the recently watched movie to Twitter.
+* [x] Sharing a movie quote from the recently watched movie to Twitter.
   
 * [ ] Showing where you can watch the recommended movies. (Decider.com)
 
@@ -39,9 +39,12 @@ This is an automated web scraper written in node, using puppeteer.
   ```json
     {
         "email": "YOUR_EMAIL_ID_HERE",
-        "password": "YOUR_PASSWORD_HERE"
+        "password": "YOUR_PASSWORD_HERE",
+        "password2": "TWITTER_PASSWORD_HERE"
     }
   ```
+
+  Note: IMDb account and Twitter account should have same email id, otherwise you'll have to make changes in the code.
 
 * Open a terminal in the activity folder and run the following command:
 
