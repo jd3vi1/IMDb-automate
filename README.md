@@ -2,6 +2,8 @@
 
 This is an automated web scraper written in node, using puppeteer.
 
+![demo](https://github.com/j-devil99/IMDb-automate/blob/master/demo/demo.gif?raw=true)
+
 ## Features
 
 * [x] Logs into the user's account, searches and rates a given movie/show.
