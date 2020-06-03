@@ -1,74 +1,74 @@
 [
     {
-        "title": "The Hangover",
+        "title": "The Shawshank Redemption",
+        "rating": "9.3",
+        "genre": " Drama",
+        "synopsis": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency."
+    },
+    {
+        "title": "The Godfather",
+        "rating": "9.2",
+        "genre": " Crime | Drama",
+        "synopsis": "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son."
+    },
+    {
+        "title": "Inception",
+        "rating": "8.8",
+        "genre": " Action | Adventure | Sci-Fi",
+        "synopsis": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O."
+    },
+    {
+        "title": "The Matrix",
+        "rating": "8.7",
+        "genre": " Action | Sci-Fi",
+        "synopsis": "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers."
+    },
+    {
+        "title": "Interstellar",
+        "rating": "8.6",
+        "genre": " Adventure | Drama | Sci-Fi",
+        "synopsis": "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival."
+    },
+    {
+        "title": "Back to the Future",
+        "rating": "8.5",
+        "genre": " Adventure | Comedy | Sci-Fi",
+        "synopsis": "Marty McFly, a 17-year-old high school student, is accidentally sent thirty years into the past in a time-traveling DeLorean invented by his close friend, the eccentric scientist Doc Brown."
+    },
+    {
+        "title": "Avengers: Infinity War",
+        "rating": "8.5",
+        "genre": " Action | Adventure | Sci-Fi",
+        "synopsis": "The Avengers and their allies must be willing to sacrifice all in an attempt to defeat the powerful Thanos before his blitz of devastation and ruin puts an end to the universe."
+    },
+    {
+        "title": "Avengers: Endgame",
+        "rating": "8.4",
+        "genre": " Action | Adventure | Drama",
+        "synopsis": "After the devastating events of Avengers: Infinity War (2018), the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe."
+    },
+    {
+        "title": "The Wolf of Wall Street",
+        "rating": "8.2",
+        "genre": " Biography | Crime | Drama",
+        "synopsis": "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government."
+    },
+    {
+        "title": "Once Upon a Time... in Hollywood",
         "rating": "7.7",
-        "genre": " Comedy",
-        "synopsis": "Three buddies wake up from a bachelor party in Las Vegas, with no memory of the previous night and the bachelor missing. They make their way around the city in order to find their friend before his wedding."
+        "genre": " Comedy | Drama",
+        "synopsis": "A faded television actor and his stunt double strive to achieve fame and success in the film industry during the final years of Hollywood's Golden Age in 1969 Los Angeles."
     },
     {
-        "title": "Superbad",
-        "rating": "7.6",
-        "genre": " Comedy",
-        "synopsis": "Two co-dependent high school seniors are forced to deal with separation anxiety after their plan to stage a booze-soaked party goes awry."
+        "title": "Logan",
+        "rating": "10",
+        "genre": " Action | Drama | Sci-Fi",
+        "synopsis": "In a future where mutants are nearly extinct, an elderly and weary Logan leads a quiet life. But when Laura, a mutant child pursued by scientists, comes to him for help, he must get her to safety."
     },
     {
-        "title": "The 40 Year-Old Virgin",
-        "rating": "7.1",
-        "genre": " Comedy | Romance",
-        "synopsis": "Goaded by his buddies, a nerdy guy who's never \"done the deed\" only finds the pressure mounting when he meets a single mother."
-    },
-    {
-        "title": "22 Jump Street",
-        "rating": "7",
-        "genre": " Action | Comedy | Crime",
-        "synopsis": "After making their way through high school (twice), big changes are in store for officers Schmidt and Jenko when they go deep undercover at a local college."
-    },
-    {
-        "title": "We're the Millers",
-        "rating": "7",
-        "genre": " Comedy | Crime",
-        "synopsis": "A veteran pot dealer creates a fake family as part of his plan to move a huge shipment of weed into the U.S. from Mexico."
-    },
-    {
-        "title": "Ted",
-        "rating": "6.9",
-        "genre": " Comedy",
-        "synopsis": "John Bennett, a man whose childhood wish of bringing his teddy bear to life came true, now must decide between keeping the relationship with the bear or his girlfriend, Lori."
-    },
-    {
-        "title": "Horrible Bosses",
-        "rating": "6.9",
-        "genre": " Comedy | Crime",
-        "synopsis": "Three friends conspire to murder their awful bosses when they realize they are standing in the way of their happiness."
-    },
-    {
-        "title": "Pineapple Express",
-        "rating": "6.9",
-        "genre": " Action | Comedy | Crime",
-        "synopsis": "A process server and his marijuana dealer wind up on the run from hitmen and a corrupt police officer after he witnesses his dealer's boss murder a competitor while trying to serve papers on him."
-    },
-    {
-        "title": "This Is the End",
-        "rating": "6.6",
-        "genre": " Comedy",
-        "synopsis": "Six Los Angeles celebrities are stuck in James Franco's house after a series of devastating events just destroyed the city. Inside, the group not only have to face the apocalypse, but themselves."
-    },
-    {
-        "title": "The Hangover Part II",
-        "rating": "6.4",
-        "genre": " Comedy",
-        "synopsis": "Two years after the bachelor party in Las Vegas, Phil, Stu, Alan, and Doug jet to Thailand for Stu's wedding. Stu's plan for a subdued pre-wedding brunch, however, goes seriously awry."
-    },
-    {
-        "title": "Bad Neighbours",
-        "rating": "6.3",
-        "genre": " Comedy",
-        "synopsis": "After they are forced to live next to a fraternity house, a couple with a newborn baby do whatever they can to take them down."
-    },
-    {
-        "title": "Ted 2",
-        "rating": "6.3",
-        "genre": " Comedy",
-        "synopsis": "Newlywed couple Ted and Tami-Lynn want to have a baby, but in order to qualify to be a parent, Ted will have to prove he's a person in a court of law."
+        "title": "Joker",
+        "rating": "10",
+        "genre": " Crime | Drama | Thriller",
+        "synopsis": "In Gotham City, mentally troubled comedian Arthur Fleck is disregarded and mistreated by society. He then embarks on a downward spiral of revolution and bloody crime. This path brings him face-to-face with his alter-ego: the Joker."
     }
 ]

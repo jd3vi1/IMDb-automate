@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
+const path = require("path");
 const credsFile = process.argv[2];
 const movie = process.argv[3];
 const rating = process.argv[4];
@@ -56,6 +57,9 @@ let scrapedData = [];
 		"watchNext.JSON",
 		JSON.stringify(scrapedData, null, 4)
 	);
+
+	// create HTML and open
+	await createHTML(tab, browser);
 })();
 
 // login function
@@ -179,7 +183,6 @@ async function addToWatchlist(tab) {
 		console.log("After scraper");
 
 		scrapedData.push(scrapeObject);
-		console.log(scrapedData);
 
 		// checks if already in watchlist
 		let inWL = await tab.evaluate((i) => {
@@ -208,6 +211,20 @@ async function addToWatchlist(tab) {
 		}
 		console.log("After clicking next");
 	}
+	console.table(scrapedData);
+}
+
+async function createHTML(tab, browser) {
+	let html = scrapedData.map((obj) => {
+		return `<div>
+			<h2>${obj.title}</h2>
+			<h3>Rating : ${obj.rating}/10</h3>
+			<p>${obj.synopsis}</p>
+			</div>`;
+	});
+	await fs.promises.writeFile("watchNext.html", html);
+	const newTab = await browser.newPage();
+	await newTab.goto(`file:${path.join(__dirname, "watchNext.html")}`);
 }
 
 // helper function for navigation
