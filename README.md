@@ -10,6 +10,8 @@ This is an automated web scraper written in node, using puppeteer.
   
 * [x] Scrapes data from all the similar movies.
 
+* [x] Sharing a movie quote from the recently watched movie to Twitter.
+  
 * [x] Stores the scraped data in JSON format.
   
 * [x] Also creates and opens an HTML page, showing what movies to watch next, sorted by IMDb rating.
@@ -17,8 +19,6 @@ This is an automated web scraper written in node, using puppeteer.
 * [ ] Stylize the HTML page using CSS or by using a templating language like handlebars.
   
 * [ ] Convert to PDF.
-  
-* [x] Sharing a movie quote from the recently watched movie to Twitter.
   
 * [ ] Showing where you can watch the recommended movies. (Decider.com)
 
