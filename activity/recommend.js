@@ -193,8 +193,18 @@ async function addToWatchlist(tab) {
 				)
 				.classList.contains("btn2_glyph_on");
 		}, i);
+
+		// checks if already rated the movie before
+		let ratedBefore = await tab.evaluate((i) => {
+			return document
+				.querySelector(
+					`#title_recs > div.rec_overviews > div:nth-child(${i}) > div.rec_details > div > div.rec-jaw-upper > div.rec-rating > div > span:nth-child(4) `
+				)
+				.classList.contains("rating-your");
+		}, i);
+
 		// click on next title
-		if (inWL) {
+		if (inWL || ratedBefore) {
 			await tab.waitForSelector(
 				`#title_recs > div.rec_overviews > div:nth-child(${i}) > div.rec_actions > div.rec_next_btn > span > a`
 			);

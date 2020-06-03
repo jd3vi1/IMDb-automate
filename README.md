@@ -4,7 +4,7 @@ This is an automated web scraper written in node, using puppeteer.
 
 ## Features
 
-* [x] Logs into the user's account, searches and rates a given movie.
+* [x] Logs into the user's account, searches and rates a given movie/show.
   
 * [x] Adds all similar movies to watchlist (skips if they're already added).
   
