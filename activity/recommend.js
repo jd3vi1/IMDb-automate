@@ -1,10 +1,44 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
+const nodemailer = require("nodemailer");
 const credsFile = process.argv[2];
 const movie = process.argv[3];
 const rating = process.argv[4];
 let scrapedData = [];
+let currentPath = process.cwd();
+let finalHtml;
+
+const css =
+    `
+        <style>
+	    .heading {
+	    	text-align: center;
+	    	margin: 20px;
+	    }
+
+	    div {
+	    	padding: 20px;
+	    	border-radius: 10px;
+	    }
+
+	    div:nth-child(2n) {
+	    	background-color: rgb(231, 206, 168);
+	    }
+
+	    div:nth-child(2n + 1) {
+	    	background-color: #A8C1E7;
+	    }
+
+	    div h3 {
+	    	font-size: 1.1rem;
+	    }
+
+	    div p {
+	    	font-size: 1rem;
+	    }
+        </style>
+    `;
 
 // main function
 (async function () {
@@ -14,6 +48,10 @@ let scrapedData = [];
 	email = creds.email;
 	password = creds.password;
 	password2 = creds.password2;
+
+	// retrieve admin credentials
+	adminEmail = creds.adminEmail;
+	adminPassword = creds.adminPassword;
 
 	// launch browser
 	let browser = await puppeteer.launch({
@@ -64,6 +102,23 @@ let scrapedData = [];
 
 	// create HTML and open
 	await createHTML(tab, browser);
+
+	// launch browser 2
+	let browser2 = await puppeteer.launch({
+		headless: true,
+		defaultViewport: null,
+		args: ["--start-maximized", "--disable-notifications"],
+	});
+	let headlessPages = await browser2.pages();
+	let headlessTab = headlessPages[0];
+	
+	// create pdf
+	await headlessTab.setContent(finalHtml);
+	await headlessTab.pdf({path: './watchNext.pdf'});
+
+
+	// mail pdf to user
+	await mailPDF(email, adminEmail, adminPassword, movie);
 })();
 
 // login function
@@ -323,14 +378,60 @@ async function tweet(tab, browser, email, password2) {
 async function createHTML(tab, browser) {
 	let html = scrapedData.map((obj) => {
 		return `<div>
-			<h2>${obj.title}</h2>
-			<h3>Rating : ${obj.rating}/10</h3>
-			<p>${obj.synopsis}</p>
-			</div>`;
+					<h2>${obj.title}</h2>
+					<h3>Rating : ${obj.rating}/10</h3>
+					<p>${obj.synopsis}</p>
+				</div>`;
 	});
-	await fs.promises.writeFile("watchNext.html", html);
+	finalHtml = `	
+						<head>
+							<title>Recommendations</title>
+							${css}
+						</head>
+						<body>
+							<h1>Watch these movies next ...</h1>
+							${html.join('')};
+						</body>
+					`
+	await fs.promises.writeFile("watchNext.html", finalHtml);
 	const newTab = await browser.newPage();
 	await newTab.goto(`file:${path.join(__dirname, "watchNext.html")}`);
+}
+
+// function to mail the PDF
+async function mailPDF(toEmail, adminEmail, adminPassword, movieWatched) {
+	let transport = nodemailer.createTransport({
+		host: "smtp.gmail.com",
+		port: 465,
+		secure: true, // use SSL
+		service: "gmail",
+		auth: {
+		  user: adminEmail,
+		  pass: adminPassword,
+		},
+		tls: {
+		  rejectUnauthorized: false,
+		},
+	  });
+	  let message = {
+		from: adminEmail,
+		to: toEmail,
+		subject: "Your movie recommendations",
+		text: `You recently watched ${movieWatched}. Here are some more movies you might like.`,
+		attachments: [
+		  {
+			filename: `${movieWatched}_watchNext.pdf`,
+			path: `${currentPath}/watchNext.pdf`,
+		  },
+		],
+	  };
+	  transport.sendMail(message, function (err) {
+		if (err) {
+		  console.log("Failed to send email.\n" + err.message);
+		  return;
+		}
+		console.log("Email sent\n check your email.");
+	  });
 }
 
 // helper function for navigation

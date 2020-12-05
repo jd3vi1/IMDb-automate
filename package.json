@@ -9,6 +9,7 @@
   "author": "Jaidev Singh Bhui",
   "license": "ISC",
   "dependencies": {
+    "nodemailer": "^6.4.16",
     "puppeteer": "^3.2.0"
   }
 }

@@ -20,9 +20,11 @@ This is an automated web scraper written in node, using puppeteer.
   
 * [ ] Stylize the HTML page using CSS or by using a templating language like handlebars.
   
-* [ ] Convert to PDF.
+* [X] Convert to PDF.
   
 * [ ] Showing where you can watch the recommended movies. (Decider.com)
+
+* [X] Email the recommendations to the user.
 
 ## Usage
 
@@ -42,7 +44,9 @@ This is an automated web scraper written in node, using puppeteer.
     {
         "email": "YOUR_EMAIL_ID_HERE",
         "password": "YOUR_PASSWORD_HERE",
-        "password2": "TWITTER_PASSWORD_HERE"
+        "password2": "TWITTER_PASSWORD_HERE",
+        "adminEmail": "MAILER_ID_HERE",
+        "adminPassword": "MAILER_PASSWORD_HERE"
     }
   ```
 
